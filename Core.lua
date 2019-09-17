@@ -1,5 +1,5 @@
-_G['SLASH_COPY1'] = '/copyanything'
-_G['SLASH_COPY2'] = '/copy'
+_G["SLASH_COPYANYTHING1"] = "/copyanything"
+_G["SLASH_COPYANYTHING2"] = "/copy"
 
 local EnumerateFrames, MouseIsOver = EnumerateFrames, MouseIsOver
 
@@ -29,7 +29,8 @@ local function CopyText()
     for i, f in ipairs(frames) do
         texts[i] = f:GetText()
     end
-    LibStub('LibCopyPaste-1.0'):Copy('Copy Anything', table.concat(texts, '\n'))
+    LibStub("LibCopyPaste-1.0"):Copy("Copy Anything", table.concat(texts, "\n"))
 end
 
-SlashCmdList['COPY'] = CopyText
+SlashCmdList["COPYANYTHING"] = CopyText
+_G["CopyAnything"] = CopyText

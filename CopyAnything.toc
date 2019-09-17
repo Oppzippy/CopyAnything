@@ -4,4 +4,6 @@
 ## Author: Oppzippy
 ## Version: @project-version@
 
+Locales\locales.xml
+Bindings.xml
 Core.lua
