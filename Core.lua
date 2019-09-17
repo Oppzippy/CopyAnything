@@ -27,7 +27,10 @@ local function CopyText()
     local frames = GetFontStrings(FilterFontString)
     local texts = {}
     for i, f in ipairs(frames) do
-        texts[i] = f:GetText()
+		local text = f:GetText()
+		if text then
+        	texts[#texts+1] = text
+		end
     end
     LibStub("LibCopyPaste-1.0"):Copy("Copy Anything", table.concat(texts, "\n"))
 end
