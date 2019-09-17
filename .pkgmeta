@@ -1,7 +1,7 @@
 package-as: CopyAnything
 
 externals:
-    Libs/LibStub: git://repos.wowace.com/wow/libstub/trunk
+    Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
     Libs/LibCopyPaste-1.0: git://github.com/Oppzippy/LibCopyPaste.git
 
 ignore:
