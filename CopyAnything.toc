@@ -1,0 +1,7 @@
+## Interface: 80100
+## Title: Copy Anything
+## Notes: Copy text from any frame.
+## Author: Oppzippy
+## Version: @project-version@
+
+Core.lua

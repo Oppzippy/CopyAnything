@@ -1,0 +1,7 @@
+package-as: CopyAnything
+
+ignore:
+  - .luacheckrc
+  - .travis.yml
+  - README.md
+  - LICENSE.txt
