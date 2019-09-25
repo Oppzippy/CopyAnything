@@ -6,8 +6,5 @@ externals:
   Libs/LibCopyPaste-1.0: git://github.com/Oppzippy/LibCopyPaste.git
 
 ignore:
-  - .editorconfig
-  - .luacheckrc
-  - .travis.yml
   - README.md
-  - LICENSE.txt
+  
