@@ -8,9 +8,11 @@
 ## Notes: Copy text from any frame.
 ## Author: Oppzippy
 ## Version: @project-version@
+## OptionalDeps: LibCopyPaste-1.0
 ## X-Curse-Project-ID: 341960
 
 Locales\locales.xml
 Libs.xml
 Bindings.xml
+TableUtils.lua
 Core.lua
