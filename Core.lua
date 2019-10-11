@@ -1,4 +1,5 @@
 local _, addon = ...
+local ADDON_NAME = "Copy Anything"
 
 local LibCopyPaste = LibStub("LibCopyPaste-1.0")
 
@@ -31,7 +32,7 @@ local function CopyFontStrings(fontStrings)
         	texts[#texts+1] = text
 		end
     end
-    LibCopyPaste:Copy("Copy Anything", table.concat(texts, "\n"))
+    LibCopyPaste:Copy(ADDON_NAME, table.concat(texts, "\n"))
 end
 
 local function GetAllChildren(frame)
@@ -76,7 +77,7 @@ do
 				for i = 1, frame:GetNumMessages() do
 					messages[i] = frame:GetMessageInfo(i)
 				end
-				LibCopyPaste:Copy("Copy Anything", table.concat(messages, "\n"))
+				LibCopyPaste:Copy(ADDON_NAME, table.concat(messages, "\n"))
 				return true
 			end
 		end,
