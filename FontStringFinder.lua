@@ -6,25 +6,33 @@ local MouseIsOver, EnumerateFrames = MouseIsOver, EnumerateFrames
 -- Special cases for frames that shouldn't be handled normally
 --
 
-local specificCases = {
-	function(frame) -- Chat frame
-		if frame.GetMessageInfo then -- chat frame
-			local messages = {}
-			for i = 1, frame:GetNumMessages() do
-				messages[i] = frame:GetMessageInfo(i)
+local specificCases
+do
+	local function filterVisible(region)
+		return region:IsVisible()
+	end
+
+	specificCases = {
+		function(frame) -- Chat frame
+			if frame.GetMessageInfo then -- chat frame
+				local messages = {}
+				for i = 1, frame:GetNumMessages() do
+					messages[i] = frame:GetMessageInfo(i)
+				end
+				return table.concat(messages, "\n")
 			end
-			return table.concat(messages, "\n")
-		end
-	end,
-	function(frame) -- Default
-		local fontStrings = addon:GetChildFontStrings(frame)
-		if #fontStrings > 500 then
-			addon:Print("More than 500 font strings were found. The copy was cancelled to prevent the game from freezing for an excessive amount of time.")
-			return
-		end
-		return addon:FontStringsToString(fontStrings)
-	end,
-}
+		end,
+		function(frame) -- Default
+			local fontStrings = addon:GetChildFontStrings(frame)
+			fontStrings = addon.tableUtils.Filter(fontStrings, filterVisible)
+			if #fontStrings > 500 then
+				addon:Print("More than 500 font strings were found. The copy was cancelled to prevent the game from freezing for an excessive amount of time.")
+				return
+			end
+			return addon:FontStringsToString(fontStrings)
+		end,
+	}
+end
 
 --------------------------------------------------------------------------------
 -- Search by font string
@@ -84,11 +92,28 @@ do
 		return frames
 	end
 
+	local blacklist = {
+		UIParent = true,
+		WorldFrame = true,
+		WeakAurasFrame = true,
+		DetailsAuraPanel = true,
+		ElvUF_PetBattleFrameHider = true,
+		TimerTracker = true,
+	}
+	setmetatable(blacklist, {
+		__index = function(t, key)
+			return type(key) == "string" and key:lower():find("parent")
+		end,
+	})
 	local function filter(frame)
-	    return frame:IsVisible() and MouseIsOver(frame)
+		local parent = frame:GetParent()
+	    return frame:IsVisible()
+			and MouseIsOver(frame)
+			and (parent and blacklist[parent:GetName()] or parent == nil)
+			and not blacklist[frame:GetName()]
 	end
 
-	-- Returns all frames under the cursor. This will contain parents and children.
+	-- Returns all top level frames under the cursor.
 	-- @return table of frames.
 	function addon:GetMouseoverFrames()
 		return GetGlobalFrames(filter)
@@ -104,9 +129,11 @@ do
 	-- @return string containing all text from frames under the cursor.
 	function addon:GetMouseoverFramesText()
 		local frames = self:GetMouseoverFrames()
-		local fontStrings = self:GetDirectChildFontStrings(frames)
-		fontStrings = self.tableUtils.Filter(fontStrings, filter)
-		return self:FontStringsToString(fontStrings)
+		local texts = {}
+		for _, frame in ipairs(frames) do
+			texts[#texts+1] = self:GetSpecificFrameText(frame)
+		end
+		return table.concat(texts, "\n")
 	end
 end
 
