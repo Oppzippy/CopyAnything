@@ -8,11 +8,16 @@
 ## Notes: Copy text from any frame.
 ## Author: Oppzippy
 ## Version: @project-version@
-## OptionalDeps: LibCopyPaste-1.0
+## OptionalDeps: LibCopyPaste-1.0, Ace3
 ## X-Curse-Project-ID: 341960
+## SavedVariables: CopyAnythingDB
 
 Locales\locales.xml
 Libs.xml
 Bindings.xml
-TableUtils.lua
+Bindings.lua
 Core.lua
+TableUtils.lua
+Options.lua
+FontStringFinder.lua
+Global.lua

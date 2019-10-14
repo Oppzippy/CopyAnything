@@ -1,4 +1,5 @@
-if GetLocale() ~= "deDE" then return end
+local L = LibStub("AceLocale-3.0"):NewLocale("CopyAnything", "deDE")
+if not L then return end
 
--- _G["BINDING_HEADER_COPYANYTHING"] = "Copy Anything"
--- _G["BINDING_NAME_COPYANYTHING_SHOW"] = "Show"
+-- L.copyAnything = "Copy Anything"
+-- L.show = "show"
