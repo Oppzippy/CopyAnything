@@ -48,7 +48,7 @@ do
 	    local frame = EnumerateFrames()
 	    while frame do
 	        local regions = { frame:GetRegions() }
-	        for i, region in next, regions do
+	        for _, region in next, regions do
 	            -- much faster to check if GetText than to use GetObjectType and check if FontString
 	            if region.GetText and condition(region) then
 	                fontStrings[#fontStrings+1] = region
@@ -123,21 +123,15 @@ do
 	end
 end
 
-do
-	local function filter(fontString)
-		return fontString:IsVisible()
+-- Returns all text from all frames under the cursor.
+-- @return string containing all text from frames under the cursor.
+function addon:GetMouseoverFramesText()
+	local frames = self:GetMouseoverFrames()
+	local texts = {}
+	for _, frame in ipairs(frames) do
+		texts[#texts+1] = self:GetSpecificFrameText(frame)
 	end
-
-	-- Returns all text from all frames under the cursor.
-	-- @return string containing all text from frames under the cursor.
-	function addon:GetMouseoverFramesText()
-		local frames = self:GetMouseoverFrames()
-		local texts = {}
-		for _, frame in ipairs(frames) do
-			texts[#texts+1] = self:GetSpecificFrameText(frame)
-		end
-		return table.concat(texts, "\n")
-	end
+	return table.concat(texts, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -186,11 +180,11 @@ end
 function addon:FontStringsToString(fontStrings)
     local texts = {}
 	local foundOne = false
-    for i, f in ipairs(fontStrings) do
-		local text = f:GetText()
+    for _, fs in ipairs(fontStrings) do
+		local text = fs:GetText()
 		if text then
 			foundOne = true
-        	texts[#texts+1] = text
+			texts[#texts+1] = text
 		end
     end
     return foundOne and table.concat(texts, "\n")

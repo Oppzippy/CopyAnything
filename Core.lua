@@ -36,9 +36,9 @@ do
 			elseif searchType == "parentFrames" then
 				text = self:GetMouseoverFramesText()
 			elseif searchType == "mouseFocus" then
-				local frame = GetMouseFocus()
-				if frame and frame ~= WorldFrame then
-					text = self:GetSpecificFrameText(frame)
+				local focusFrame = GetMouseFocus()
+				if focusFrame and focusFrame ~= WorldFrame then
+					text = self:GetSpecificFrameText(focusFrame)
 				end
 			else
 				self:Print(L.invalidSearchType:format(searchType))

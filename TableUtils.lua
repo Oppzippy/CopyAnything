@@ -55,7 +55,7 @@ end
 -- @return Reduced value.
 function tableUtils.Reduce(t, reducer)
 	local accumulator = nil
-	for i, current in ipairs(t) do
+	for _, current in ipairs(t) do
 		accumulator = reducer(accumulator, current)
 	end
 	return accumulator
