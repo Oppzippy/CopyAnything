@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("CopyAnything", "enUS", true)
 
---@localization(locale="enUS", handle-unlocalized="comment")
+--@localization(locale="enUS", handle-unlocalized="comment")@
 
 --@do-not-package@
 -- General

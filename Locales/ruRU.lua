@@ -1,4 +1,4 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("CopyAnything", "ruRU")
 if not L then return end
 
---@localization(locale="ruRU", handle-unlocalized="comment")
+--@localization(locale="ruRU", handle-unlocalized="comment")@
