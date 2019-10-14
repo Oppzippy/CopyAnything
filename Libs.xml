@@ -8,7 +8,7 @@
 	<Script file="Libs\AceDB-3.0\AceDB-3.0.lua"/>
 	<Script file="Libs\AceDBOptions-3.0\AceDBOptions-3.0.lua"/>
 	<Script file="Libs\AceConfig-3.0\AceConfig-3.0.lua"/>
-	<Script file="Libs\AceConfig-3.0\AceConfigRegistrty\AceConfigRegistrty-3.0.lua"/>
+	<Script file="Libs\AceConfig-3.0\AceConfigRegistry\AceConfigRegistry-3.0.lua"/>
 	<Script file="Libs\AceConfig-3.0\AceConfigDialog\AceConfigDialog-3.0.lua"/>
     <Script file="Libs\LibCopyPaste-1.0\LibCopyPaste-1.0.lua"/>
     @end-non-debug@-->

@@ -12,8 +12,8 @@
 ## X-Curse-Project-ID: 341960
 ## SavedVariables: CopyAnythingDB
 
-Locales\locales.xml
 Libs.xml
+Locales\locales.xml
 Bindings.xml
 Bindings.lua
 Core.lua
