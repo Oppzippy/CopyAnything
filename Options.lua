@@ -22,13 +22,19 @@ local options = {
 			name = L.general,
 			type = "group",
 			args = {
+				searchTypeDescExtended = {
+					name = L.searchTypeDescExtended,
+					type = "description",
+					order = 1,
+				},
 				searchType = {
 					name = L.searchType,
 					desc = L.searchTypeDesc,
 					type = "select",
+					order = 2,
 					values = {
-						filterFontStrings = L.filterFontStrings,
-						filterFrames = L.filterFrames,
+						fontStrings = L.fontStrings,
+						parentFrames = L.parentFrames,
 						mouseFocus = L.mouseFocus,
 					},
 				},
@@ -39,7 +45,7 @@ local options = {
 
 local defaultDB = {
 	profile = {
-		searchType = "filterFontStrings",
+		searchType = "fontStrings",
 	},
 }
 

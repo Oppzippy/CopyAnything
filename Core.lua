@@ -31,9 +31,9 @@ do
 		else -- Mouseover
 			local searchType = self.db.profile.searchType
 			local text = nil
-			if searchType == "filterFontStrings" then
+			if searchType == "fontStrings" then
 				text = self:GetMouseoverText()
-			elseif searchType == "filterFrames" then
+			elseif searchType == "parentFrames" then
 				text = self:GetMouseoverFramesText()
 			elseif searchType == "mouseFocus" then
 				local frame = GetMouseFocus()
@@ -41,7 +41,7 @@ do
 					text = self:GetSpecificFrameText(frame)
 				end
 			else
-				self:Print(L.invalidSearchType)
+				self:Print(L.invalidSearchType:format(searchType))
 				return
 			end
 			if not text then

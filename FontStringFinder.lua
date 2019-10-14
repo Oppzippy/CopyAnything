@@ -1,4 +1,5 @@
 local addon = select(2, ...).addon
+local L = addon.L
 
 local MouseIsOver, EnumerateFrames = MouseIsOver, EnumerateFrames
 
@@ -26,7 +27,7 @@ do
 			local fontStrings = addon:GetChildFontStrings(frame)
 			fontStrings = addon.tableUtils.Filter(fontStrings, filterVisible)
 			if #fontStrings > 500 then
-				addon:Print("More than 500 font strings were found. The copy was cancelled to prevent the game from freezing for an excessive amount of time.")
+				addon:Print(L.tooManyFontStrings:format(500))
 				return
 			end
 			return addon:FontStringsToString(fontStrings)
@@ -92,6 +93,7 @@ do
 		return frames
 	end
 
+	-- Parent frame names that don't contain the word parent
 	local blacklist = {
 		UIParent = true,
 		WorldFrame = true,
@@ -105,6 +107,7 @@ do
 			return type(key) == "string" and key:lower():find("parent")
 		end,
 	})
+
 	local function filter(frame)
 		local parent = frame:GetParent()
 	    return frame:IsVisible()
