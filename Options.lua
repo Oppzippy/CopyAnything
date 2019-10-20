@@ -50,7 +50,7 @@ local defaultDB = {
 }
 
 function addon:OnInitialize()
-	addon.db = AceDB:New("CopyAnythingDB", defaultDB, true)
+	self.db = AceDB:New("CopyAnythingDB", defaultDB, true)
 	AceConfig:RegisterOptionsTable("CopyAnything", options)
 	options.args.profiles = AceDBOptions:GetOptionsTable(self.db)
 	AceConfigDialog:AddToBlizOptions("CopyAnything", L.copyAnything, nil, "general")
