@@ -44,23 +44,23 @@ do
 	-- @param condition Function that returns a truthy value if the font string should be returned.
 	-- @return table of font strings that met the condition.
 	local function GetGlobalFontStrings(condition)
-	    local fontStrings = {}
-	    local frame = EnumerateFrames()
-	    while frame do
-	        local regions = { frame:GetRegions() }
-	        for _, region in next, regions do
-	            -- much faster to check if GetText than to use GetObjectType and check if FontString
-	            if region.GetText and condition(region) then
-	                fontStrings[#fontStrings+1] = region
-	            end
-	        end
-	        frame = EnumerateFrames(frame)
-	    end
-	    return fontStrings
+		local fontStrings = {}
+		local frame = EnumerateFrames()
+		while frame do
+			local regions = { frame:GetRegions() }
+			for _, region in next, regions do
+				-- much faster to check if GetText than to use GetObjectType and check if FontString
+				if region.GetText and condition(region) then
+					fontStrings[#fontStrings+1] = region
+				end
+			end
+			frame = EnumerateFrames(frame)
+		end
+		return fontStrings
 	end
 
 	local function filter(fontString)
-	    return fontString:IsVisible() and MouseIsOver(fontString)
+		return fontString:IsVisible() and MouseIsOver(fontString)
 	end
 
 	-- Returns all font strings under the cursor.
@@ -110,7 +110,7 @@ do
 
 	local function filter(frame)
 		local parent = frame:GetParent()
-	    return frame:IsVisible()
+		return frame:IsVisible()
 			and MouseIsOver(frame)
 			and (parent and blacklist[parent:GetName()] or parent == nil)
 			and not blacklist[frame:GetName()]
@@ -178,16 +178,16 @@ end
 -- @param fontStrings table of FontStrings.
 -- @return concatenated text of all font strings.
 function addon:FontStringsToString(fontStrings)
-    local texts = {}
+	local texts = {}
 	local foundOne = false
-    for _, fs in ipairs(fontStrings) do
+	for _, fs in ipairs(fontStrings) do
 		local text = fs:GetText()
 		if text then
 			foundOne = true
 			texts[#texts+1] = text
 		end
-    end
-    return foundOne and table.concat(texts, "\n")
+	end
+	return foundOne and table.concat(texts, "\n")
 end
 
 do
