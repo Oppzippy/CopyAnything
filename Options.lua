@@ -21,23 +21,44 @@ local options = {
 		general = {
 			name = L.general,
 			type = "group",
+			childGroups = "tab",
 			args = {
-				searchTypeDescExtended = {
-					name = L.searchTypeDescExtended,
-					type = "description",
+				general = {
+					name = L.general,
+					type = "group",
 					order = 1,
+					args = {
+						searchTypeDescExtended = {
+							name = L.searchTypeDescExtended,
+							type = "description",
+							order = 1,
+						},
+						searchType = {
+							name = L.searchType,
+							desc = L.searchTypeDesc,
+							type = "select",
+							order = 2,
+							values = {
+								fontStrings = L.fontStrings,
+								parentFrames = L.parentFrames,
+								mouseFocus = L.mouseFocus,
+							},
+						},
+					}
 				},
-				searchType = {
-					name = L.searchType,
-					desc = L.searchTypeDesc,
-					type = "select",
+				copyFrame = {
+					name = L.copyFrame,
+					type = "group",
 					order = 2,
-					values = {
-						fontStrings = L.fontStrings,
-						parentFrames = L.parentFrames,
-						mouseFocus = L.mouseFocus,
-					},
-				},
+					args = {
+						fastCopy = {
+							name = L.fastCopy,
+							desc = L.fastCopyDesc,
+							type = "toggle",
+							order = 1,
+						}
+					}
+				}
 			},
 		},
 	},
@@ -46,6 +67,7 @@ local options = {
 local defaultDB = {
 	profile = {
 		searchType = "fontStrings",
+		fastCopy = false,
 	},
 }
 

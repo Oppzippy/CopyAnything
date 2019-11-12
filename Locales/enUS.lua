@@ -12,6 +12,9 @@ L.show = "Show"
 -- Options
 L.general = "General"
 L.profiles = "Profiles"
+L.copyFrame = "Copy Frame"
+L.fastCopy = "Fast Copy"
+L.fastCopyDesc = "Automatically hide the copy frame after CTRL+C is pressed."
 
 -- Search types
 L.searchType = "Search Type"
