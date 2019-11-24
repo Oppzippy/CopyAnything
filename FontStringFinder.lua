@@ -60,7 +60,15 @@ do
 	end
 
 	local function filter(fontString)
-		return fontString:IsVisible() and MouseIsOver(fontString)
+		if fontString:IsVisible() then
+			-- No way of knowing if the region is restricted, so just skip this one
+			-- if it is restricted or has any other error.
+			local status, isMouseOver = pcall(function()
+				return MouseIsOver(fontString)
+			end)
+			return status and isMouseOver
+		end
+		return false
 	end
 
 	-- Returns all font strings under the cursor.
