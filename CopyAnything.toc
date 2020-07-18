@@ -9,8 +9,9 @@
 ## Author: Oppzippy
 ## Version: @project-version@
 ## OptionalDeps: LibCopyPaste-1.0, Ace3
-## X-Curse-Project-ID: 341960
 ## SavedVariables: CopyAnythingDB
+## X-Curse-Project-ID: 341960
+## X-WoWI-ID: 25626
 
 Libs.xml
 Locales\locales.xml
