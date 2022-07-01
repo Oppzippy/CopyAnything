@@ -12,7 +12,7 @@ externals:
   Libs/AceDBOptions-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceDBOptions-3.0
   Libs/AceConfig-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceConfig-3.0
   Libs/AceGUI-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceGUI-3.0
-  Libs/LibCopyPaste-1.0: git://github.com/Oppzippy/LibCopyPaste.git
+  Libs/LibCopyPaste-1.0: https://github.com/Oppzippy/LibCopyPaste.git
 
 ignore:
   - README.md
