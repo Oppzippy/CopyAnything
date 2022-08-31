@@ -1,6 +1,7 @@
 ## Interface: 90207
 ## Interface-Classic: 11403
 ## Interface-BCC: 20504
+## Interface-Wrath: 30400
 ## Title: Copy Anything
 ## Notes: Copy text from any frame.
 ## Author: Oppzippy
