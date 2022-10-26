@@ -14,7 +14,6 @@
 
 Libs.xml
 Locales\locales.xml
-Bindings.xml
 Bindings.lua
 Core.lua
 TableUtils.lua
