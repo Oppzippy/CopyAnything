@@ -15,11 +15,13 @@ function addon:OnEnable()
 end
 
 function addon:Copy(text)
-	local fastCopy = self.db.profile.fastCopy
-	LibCopyPaste:Copy(L.copyAnything, text, {
-		autoHide = fastCopy,
-		readOnly = fastCopy,
-	})
+	C_Timer.After(0, function()
+		local fastCopy = self.db.profile.fastCopy
+		LibCopyPaste:Copy(L.copyAnything, text, {
+			autoHide = fastCopy,
+			readOnly = fastCopy,
+		})
+	end)
 end
 
 do
@@ -52,7 +54,7 @@ do
 				self:Print(L.noTextFound)
 				return
 			end
-			addon:Copy(text)
+			self:Copy(text)
 		end
 	end
 end
