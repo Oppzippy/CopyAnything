@@ -1,3 +1,6 @@
 <Bindings>
-	<Binding name="COPYANYTHING_SHOW" category="BINDING_HEADER_COPYANYTHING">CopyAnything()</Binding>
+	<!-- category needs to be plain text to avoid taint
+		 https://us.forums.blizzard.com/en/wow/t/bindingsxml-taint-and-other-issues/1394681/9
+		 -->
+	<Binding name="COPYANYTHING_SHOW" category="CopyAnything ">CopyAnything()</Binding>
 </Bindings>
