@@ -1,21 +1,23 @@
--- Translator ZamestoTV
 local L = LibStub("AceLocale-3.0"):NewLocale("CopyAnything", "ruRU")
 if not L then return end
+
 --@localization(locale="ruRU", handle-unlocalized="comment")@
--- Общие
+-- Translator ZamestoTV
+--@do-not-package@
+-- General
 L.copyAnything = "Копировать всё"
 
--- Привязки
+-- Bindings
 L.show = "Показать"
 
--- Настройки
+-- Options
 L.general = "Общие"
 L.profiles = "Профили"
 L.copyFrame = "Копировать фрейм"
 L.fastCopy = "Быстрое копирование"
 L.fastCopyDesc = "Автоматически скрывать фрейм копирования после нажатия CTRL+C."
 
--- Типы поиска
+-- Search types
 L.searchType = "Тип поиска"
 L.searchTypeDesc = "Метод поиска фреймов под курсором."
 L.searchTypeDescExtended = [=[Строки шрифта (по умолчанию) - Поиск отдельных строк шрифта под курсором.
@@ -25,7 +27,8 @@ L.fontStrings = "Строки шрифта"
 L.parentFrames = "Родительские фреймы"
 L.mouseFocus = "Фокус мыши"
 
--- Ошибки
+-- Errors
 L.invalidSearchType = "Неверный тип поиска '%s'. Проверьте настройки."
 L.noTextFound = "Текст не найден."
 L.tooManyFontStrings = "Найдено более %d строк шрифта. Копирование отменено, чтобы предотвратить зависание игры на длительное время."
+--@end-do-not-package@
