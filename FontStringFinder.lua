@@ -215,7 +215,7 @@ do
 end
 
 -- Returns font strings that are a direct child of any of the supplied frames.
----@param framesIter fun(): Frame frames to search.
+---@param framesIter fun(): Frame? frames to search.
 ---@return fun(): FontString? iter FontStrings that are direct children of the supplied frames.
 function addon:GetDirectChildFontStrings(framesIter)
 	return coroutine.wrap(function()
