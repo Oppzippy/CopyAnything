@@ -16,7 +16,7 @@ end
 
 function addon:Copy(text)
 	C_Timer.After(0, function()
-		local fastCopy = self.db.profile.fastCopy
+		local fastCopy = self.db and self.db.profile and self.db.profile.fastCopy
 		LibCopyPaste:Copy(L.copyAnything, text, {
 			autoHide = fastCopy,
 			readOnly = fastCopy,
@@ -29,13 +29,13 @@ do
 		local frame = msg and #msg > 0 and _G[msg]
 		if frame and frame.GetChildren then -- Specific frame
 			local text = self:GetSpecificFrameText(frame)
-			if not text then
+			if not text or text == "" then
 				self:Print(L.noTextFound)
 				return
 			end
 			self:Copy(text)
 		else -- Mouseover
-			local searchType = self.db.profile.searchType
+			local searchType = self.db and self.db.profile and self.db.profile.searchType or "fontStrings"
 			local text = nil
 			if searchType == "fontStrings" then
 				text = self:GetMouseoverText()
@@ -49,7 +49,7 @@ do
 				self:Print(L.invalidSearchType:format(searchType))
 				return
 			end
-			if not text then
+			if not text or text == "" then
 				self:Print(L.noTextFound)
 				return
 			end
