@@ -381,8 +381,11 @@ end
 ---@return string?
 function addon:GetSpecificFrameText(frame)
 	if not frame or not frame.GetChildren or not frame.GetRegions then return nil end
+	local okName, frameName = pcall(function() return frame:GetName() end)
+	local isChat = okName and frameName and frameName:match("^ChatFrame%d+$")
 	local okIter, fontStringIter = pcall(function() return addon:GetChildFontStrings(frame) end)
 	if not okIter or type(fontStringIter) ~= "function" then return nil end
+	-- for chat frames, IsVisible is unreliable for recently faded lines (loot vs achievement timing), so allow fallback without IsVisible
 	local function visibleFontStrings()
 		local fontString = fontStringIter()
 		while fontString do
@@ -390,11 +393,19 @@ function addon:GetSpecificFrameText(frame)
 			if ok and canAccessValueCompat(isVisible) and isVisible then
 				return fontString
 			end
+			-- for chat, also consider FontStrings that are not IsVisible but have text and are not fully hidden (e.g., just faded)
+			if isChat then
+				local ok2, text = pcall(function() return fontString:GetText() end)
+				if ok2 and canAccessValueCompat(text) and text and text ~= "" then
+					-- treat as visible for chat fallback
+					return fontString
+				end
+			end
 			fontString = fontStringIter()
 		end
 	end
 	local ok, result = pcall(function() return addon:FontStringsToString(visibleFontStrings) end)
-	if ok then return result end
+	if ok and result and result ~= "" then return result end
 	return nil
 end
 
