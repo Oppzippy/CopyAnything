@@ -1,11 +1,11 @@
-local _, namespace = ...
+---@class CopyAnything
+local addon = select(2, ...).addon
 
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceDB = LibStub("AceDB-3.0")
 local AceDBOptions = LibStub("AceDBOptions-3.0")
 
-local addon = namespace.addon
 local L = addon.L
 
 ---@type AceConfig.OptionsTable

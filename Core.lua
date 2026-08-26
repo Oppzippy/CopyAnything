@@ -1,9 +1,11 @@
-local _, namespace = ...
+---@class CopyAnything
+local namespace = select(2, ...)
 
 local AceAddon = LibStub("AceAddon-3.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local LibCopyPaste = LibStub("LibCopyPaste-1.0")
 
+---@class CopyAnything: AceAddon, AceConsole-3.0
 local addon = AceAddon:NewAddon("CopyAnything", "AceConsole-3.0")
 local L = AceLocale:GetLocale("CopyAnything")
 namespace.addon = addon

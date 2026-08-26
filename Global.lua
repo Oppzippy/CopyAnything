@@ -1,3 +1,4 @@
+---@class CopyAnything
 local addon = select(2, ...).addon
 
 local CopyAnything = {}
