@@ -37,7 +37,7 @@ function addon:GetMouseoverFontStringsText()
 			local isVisible = fontString:IsVisible()
 			if canAccessValueCompat(isVisible) and isVisible then
 				-- TODO determine if the comment below is still accurate, and if so, log
-				-- errors that aren't due to daint
+				-- errors that aren't due to restricted regions
 
 				-- No way of knowing if the region is restricted, so just skip this one
 				-- if it is restricted or has any other error.
