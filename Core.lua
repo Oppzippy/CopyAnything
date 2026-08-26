@@ -40,7 +40,7 @@ do
 			local searchType = self.db.profile.searchType
 			local text = nil
 			if searchType == "fontStrings" then
-				text = self:GetMouseoverText()
+				text = self:GetMouseoverFontStringsText()
 			elseif searchType == "parentFrames" then
 				text = self:GetMouseoverFramesText()
 			elseif searchType == "mouseFocus" then

@@ -29,7 +29,7 @@ end
 --
 
 ---@return string mouseoverText all text under the cursor.
-function addon:GetMouseoverText()
+function addon:GetMouseoverFontStringsText()
 	local fontStringsIter = addon:GetDirectChildFontStrings(self:IterateFrames())
 	local function mouseoverFontStringsIter()
 		local fontString = fontStringsIter()
