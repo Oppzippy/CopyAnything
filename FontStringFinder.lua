@@ -1,6 +1,15 @@
 ---@class CopyAnything
 local addon = select(2, ...).addon
 
+-- Restore of the pre-iterator guard (see ab1e041 refactor which dropped the
+-- old "#fontStrings > 500" check): cap collected font strings so one hotkey
+-- can't freeze the client. Matches Locales/enUS.lua tooManyFontStrings.
+local MAX_FONT_STRINGS = 500
+-- Safety net for the full EnumerateFrames() scan itself: the quest UI in
+-- 12.x can create tens of thousands of frames; abort the scan before it
+-- freezes the client.
+local MAX_SCANNED_REGIONS = 5000
+
 ---@return boolean
 local function canAccessValueCompat(value)
 	return WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or canaccessvalue(value)
@@ -23,6 +32,22 @@ local function hasAnySecretAspectCompat(value)
 	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and value:HasAnySecretAspect()
 end
 
+-- Single-pcall prefilter + region fetch for one frame. One pcall and zero
+-- closures per frame: the previous version built 2-3 closures per frame
+-- (~90k allocs over a 30k-frame scan) which itself cost seconds.
+-- Returns regions table, or nil + skip reason ("hidden"/"empty").
+local function GetVisibleFrameRegions(frame)
+	local vis = frame:IsVisible()
+	if not canAccessValueCompat(vis) or not vis then
+		return nil, "hidden"
+	end
+	local n = frame:GetNumRegions()
+	if not canAccessValueCompat(n) or type(n) ~= "number" or n <= 0 then
+		return nil, "empty"
+	end
+	return { frame:GetRegions() }, nil
+end
+
 
 --------------------------------------------------------------------------------
 -- Search by font string
@@ -30,12 +55,76 @@ end
 
 ---@return string mouseoverText all text under the cursor.
 function addon:GetMouseoverFontStringsText()
+	-- Fast path: only scan the subtrees under the mouse focus stack
+	-- (a handful of frames) instead of all ~30k enumerated frames.
+	-- Falls back to the full scan when nothing is found there.
+	local foci
+	if GetMouseFoci then
+		foci = GetMouseFoci()
+	else
+		local f = GetMouseFocus()
+		foci = f and { f } or {}
+	end
+	local fastCo = coroutine.wrap(function()
+		-- (a) focus subtrees (existing behaviour)
+		for _, focusFrame in ipairs(foci) do
+			if focusFrame ~= WorldFrame and focusFrame.GetChildren then
+				local ok, iter = pcall(function()
+					return addon:GetChildFontStrings(focusFrame)
+				end)
+				if ok and iter then
+					for region in iter do
+						coroutine.yield(region)
+					end
+				end
+			end
+		end
+		-- (b) direct regions of each focus frame and its ancestors, walking
+		-- up. Covers panels whose GetChildren is forbidden (subtree scan
+		-- above then yields nothing) but whose own GetRegions still works.
+		for _, focusFrame in ipairs(foci) do
+			local depth = 0
+			local frame = focusFrame
+			while frame and depth < 8 do
+				local okR, regions = pcall(GetVisibleFrameRegions, frame)
+				if okR and regions then
+					for _, region in next, regions do
+						if region.GetText then
+							coroutine.yield(region)
+						end
+					end
+				end
+				local okP, parent = pcall(function()
+					return frame:GetParent()
+				end)
+				if not okP then
+					break
+				end
+				frame = parent
+				depth = depth + 1
+			end
+		end
+	end)
+	local text = self:FontStringsToString(self:FilterMouseoverFontStrings(fastCo))
+	if text then
+		return text
+	end
 	local fontStringsIter = addon:GetDirectChildFontStrings(self:IterateFrames())
-	local function mouseoverFontStringsIter()
+	return self:FontStringsToString(self:FilterMouseoverFontStrings(fontStringsIter))
+end
+
+-- Shared IsVisible + IsMouseOver filter, extracted so the fast path and the
+-- full scan use identical logic.
+---@param fontStringsIter fun(): FontString?
+---@return fun(): FontString? iter
+function addon:FilterMouseoverFontStrings(fontStringsIter)
+	return function()
 		local fontString = fontStringsIter()
 		while fontString do
-			local isVisible = fontString:IsVisible()
-			if canAccessValueCompat(isVisible) and isVisible then
+			local okVis, isVisible = pcall(function()
+				return fontString:IsVisible()
+			end)
+			if okVis and canAccessValueCompat(isVisible) and isVisible then
 				-- TODO determine if the comment below is still accurate, and if so, log
 				-- errors that aren't due to restricted regions
 
@@ -51,7 +140,6 @@ function addon:GetMouseoverFontStringsText()
 			fontString = fontStringsIter()
 		end
 	end
-	return self:FontStringsToString(mouseoverFontStringsIter)
 end
 
 --------------------------------------------------------------------------------
@@ -117,7 +205,13 @@ function addon:GetMouseoverFramesText()
 	for frame in self:GetMouseoverFrames() do
 		texts[#texts + 1] = self:GetSpecificFrameText(frame)
 	end
-	return table.concat(texts, "\n")
+	local result = table.concat(texts, "\n")
+	-- "" is truthy in Lua: without this, Core.lua SlashCopy would call
+	-- Copy("") and show an empty popup instead of "No text found."
+	if result == "" then
+		return nil
+	end
+	return result
 end
 
 --------------------------------------------------------------------------------
@@ -138,7 +232,11 @@ function addon:GetMouseFocusText()
 			lines[#lines + 1] = self:GetSpecificFrameText(frame)
 		end
 	end
-	return table.concat(lines, "\n")
+	local result = table.concat(lines, "\n")
+	if result == "" then
+		return nil
+	end
+	return result
 end
 
 --------------------------------------------------------------------------------
@@ -195,10 +293,20 @@ end
 ---@return string
 function addon:FontStringsToString(fontStringsIter)
 	local texts = {}
+	local scanned = 0
 	for fontString in fontStringsIter do
+		scanned = scanned + 1
+		if scanned > MAX_SCANNED_REGIONS then
+			self:Print((self.L and self.L.tooManyFontStrings or "More than %d font strings were found. The copy was cancelled to prevent the game from freezing for an excessive amount of time."):format(MAX_FONT_STRINGS))
+			return nil
+		end
 		local text = fontString:GetText()
 		if canAccessValueCompat(text) and text then
 			texts[#texts + 1] = text
+			if #texts > MAX_FONT_STRINGS then
+				self:Print((self.L and self.L.tooManyFontStrings or "More than %d font strings were found. The copy was cancelled to prevent the game from freezing for an excessive amount of time."):format(MAX_FONT_STRINGS))
+				return nil
+			end
 		end
 	end
 	return texts[1] and table.concat(texts, "\n")
@@ -210,7 +318,15 @@ do
 	---@return fun(): Frame? iter
 	local function GetChildrenRecursive(frame)
 		return coroutine.wrap(function()
-			local children = { frame:GetChildren() }
+			-- 12.x/Midnight: EnumerateFrames() can yield forbidden frames;
+			-- calling GetChildren on one throws "Attempt to access forbidden
+			-- object" and aborts the whole copy, so skip it instead.
+			local ok, children = pcall(function()
+				return { frame:GetChildren() }
+			end)
+			if not ok or type(children) ~= "table" then
+				return
+			end
 			local count = #children
 			for i = 1, count do
 				local child = children[i]
@@ -243,10 +359,15 @@ end
 function addon:GetDirectChildFontStrings(framesIter)
 	return coroutine.wrap(function()
 		for frame in framesIter do
-			local regions = { frame:GetRegions() }
-			for _, region in next, regions do
-				if region.GetText then
-					coroutine.yield(region)
+			-- One pcall, zero closures per frame (see GetVisibleFrameRegions).
+			-- Forbidden frames land here and are skipped instead of aborting
+			-- the whole copy (GetRegions taint error).
+			local ok, regions = pcall(GetVisibleFrameRegions, frame)
+			if ok and regions then
+				for _, region in next, regions do
+					if region.GetText then
+						coroutine.yield(region)
+					end
 				end
 			end
 		end
