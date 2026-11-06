@@ -1,26 +1,28 @@
 ---@class CopyAnything
 local addon = select(2, ...).addon
 
+local GAME_VERSION_HAS_SECRETS = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or WOW_PROJECT_ID == WOW_PROJECT_CAMELOT
+
 ---@return boolean
 local function canAccessValueCompat(value)
-	return WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or canaccessvalue(value)
+	return not GAME_VERSION_HAS_SECRETS or canaccessvalue(value)
 end
 
 ---@return boolean
 local function canAccessAllValuesCompat(...)
-	return WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or canaccessallvalues(...)
+	return not GAME_VERSION_HAS_SECRETS or canaccessallvalues(...)
 end
 
 ---@param value Frame
 ---@return boolean
 local function isAnchoringSecretCompat(value)
-	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and value:IsAnchoringSecret()
+	return not GAME_VERSION_HAS_SECRETS and value:IsAnchoringSecret()
 end
 
 ---@param value Frame
 ---@return boolean
 local function hasAnySecretAspectCompat(value)
-	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and value:HasAnySecretAspect()
+	return not GAME_VERSION_HAS_SECRETS and value:HasAnySecretAspect()
 end
 
 
